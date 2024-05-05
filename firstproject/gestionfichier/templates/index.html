@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        
 </head>
 <body>
-    <h1>Welcome to your file management application</h1>
-    <p>This is the homepage of your application.</p>
-    <p><a href="{% url 'upload_image' %}">Upload Image</a></p>
+    <div class="header">
+        <h2>Les annonces</h2>
+        <a href="/photo_list" class="profile-link">Profil</a>
+    </div>
+    <div class="search-bar">
+        <form action="{% url 'search' %}" method="GET">
+            <input type="text" name="q" placeholder="Rechercher...">
+            <button type="submit">Rechercher</button>
+        </form>
+        <a href="/" class="reset-button">Réinitialiser</a>
+    </div>
+    
+    <ul>
+    {% for annonce in annonces %}
+        <li>
+            <h3>Titre : {{ annonce.title }}</h3>
+            <p>Description: {{ annonce.description }}</p>
+            <div>
+                {% for image in annonce.uploadimage_set.all %}
+                    <div class="image-container">
+                        <a href="{{ image.image.url }}" target="_blank">
+                            <img src="{{ image.image.url }}" alt="{{ image.annonce.title }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
 </body>
 </html>

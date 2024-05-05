@@ -2,73 +2,45 @@
 <html>
 <head>
     <title>Photo List</title>
-    <style>
-        /* Style pour améliorer l'apparence de la page */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        h2 {
-            color: #333;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        p {
-            margin: 0;
-            color: #666;
-        }
-        button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #butt_delete {
-            background-color: red !important;
-            margin: 1rem;
-        }
-        #a{
-            margin: 1rem;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}">
+        
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-3bFKfa4JJ/oFWR0IFzI3PFtSV/h2SG/gGevaz+MMZZi4IweI49+GzYUj/+34emYr" crossorigin="anonymous">
 </head>
 <body>
-    <h2>Photo List</h2>
-    <a href="/" id="a"><button>Retour </button></a>
-     <!-- Bouton pour supprimer toutes les photos -->
-     <form action="{% url 'delete_all_photos' %}" method="post">
-        {% csrf_token %}
-        <button type="submit" id="butt_delete">Supprimer toutes les photos</button>
-    </form>
+    <div class="header">
+        <h2>Mes annonces</h2>
+        <div class="nav-links">
+            <a href="/upload_photo">Ajouter une annonce</a>
+            <a href="/">Home</a>
+            <a href="/profile">Compte</a>
+            
+            
+        </div>
+    </div>
     <ul>
-    {% for photo in photos %}
+    {% for annonce in annonces %}
         <li>
-            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
-            <p><strong>Title:</strong> {{ photo.title }}</p>
-            <p><strong>Description:</strong> {{ photo.description }}</p>
+            <h3>Titre : {{ annonce.title }}</h3>
+            <p>Description: {{ annonce.description }}</p>
+            <div>
+                {% for image in annonce.uploadimage_set.all %}
+                    <div class="image-container">
+                        <a href="{{ image.image.url }}" target="_blank"> <!-- Lien vers l'image en plein écran -->
+                            <img src="{{ image.image.url }}" alt="{{ image.annonce.title }}">
+                        </a>
+                        <!-- Formulaire pour supprimer l'image -->
+                        <form action="{% url 'delete_photo' image.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" >supprimer l'image</button> <!-- Icône de suppression -->
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            <form action="{% url 'delete_annonce' annonce.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Supprimer annonce</button>
+            </form>
         </li>
     {% endfor %}
     </ul>
