@@ -5,7 +5,9 @@ Assurez-vous d'avoir Python et installez Django :
 Pour lancer l'apps exécutez les commandes suivantes:
 
   -python manage.py makemigrations gestionfichier
+
   -python manage.py migrate
+
   -python manage.py runserver
 
 Objectif : 
